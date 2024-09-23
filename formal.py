@@ -1,5 +1,6 @@
 from math import perm
 from random import shuffle
+import itertools
 
 def proc(n, num_games, verbose=False):
     def play_round(verbose=verbose):
@@ -51,9 +52,26 @@ def proc(n, num_games, verbose=False):
     if verbose: print(f'Mean over {num_games} games in round 2 = {mean_val}')
     return mean_val
 
-for n in range(3,4):
-    val = proc(n=n, num_games=1000, verbose=False)
-    print(f'Expectation for permutation of length {n} = {val}')
+# for n in range(3,4):
+#     val = proc(n=n, num_games=1000, verbose=False)
+#     print(f'Expectation for permutation of length {n} = {val}')
 
 
+def test_perm(perm):
+    index = 0
+    failed = False
+    while not failed or index == len(perm):
+        index += 1
+        break
+
+    return index
+
+for n in range(3, 5):
+    fail_at_list = [0 for k in range(n+1)] # number of failures 
+    for perm in itertools.permutations([i+1 for i in range(1,n+1)]):
+        index = test_perm(perm)
+        fail_at_list[index] += 1
+    
+    for index, val in enumerate(fail_at_list):
+        print(f'Perms of length {n} fail at position {index} = {val}')
 
