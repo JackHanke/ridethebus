@@ -36,7 +36,7 @@ def test_perm(perm):
 
     return k
 
-def test()
+def test():
     for n in range(3, 7):
         fail_at_list = [0 for k in range(n)] # number of failures 
         for perm in itertools.permutations([i for i in range(1,n+1)]):
@@ -46,3 +46,16 @@ def test()
         for index, val in enumerate(fail_at_list):
             print(f'Perms of length {n} fail at position {index} = {val}')
 
+
+
+oeis_lst = [1,1,2,5,16,62,286,1519,9184,62000,463964,3800684,
+ 33911424,326678010,3385261194,37492199549,
+ 442541571936,5539379635136,73368335117584,
+ 1024178393797764,15041551052243448,
+ 231665680071392900,3736363255881557460,
+ 62935656581952683960]
+
+
+from math import factorial
+for index, val in enumerate(oeis_lst):
+    print(val/factorial(index))
