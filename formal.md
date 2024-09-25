@@ -15,5 +15,7 @@ where $p = \mathbb{P}(X_n < n). $
 
 $\mathbb{E}(X_2)=10$ 
 
+[A144188](https://oeis.org/search?q=5%2C+16%2C+62%2C+286&language=english&go=Search)
+
 
 
