@@ -10,12 +10,15 @@ The obserever has the knowledge that he is sampling from a permutation on $n$ el
 
 Let $X_n$ be the random variable representing the number of correct predictions before an incorrect prediction.
 
-Note that we have for $k=qn+r$ that $\mathbb{P}(X_n = k) = (1-p)^q \mathbb{P}(X_n = r),$
-where $p = \mathbb{P}(X_n < n). $ 
+The process can also be thought of as making random hops from the ordered list $1$ to $n$, where one marks spots
 
 $\mathbb{E}(X_2)=10$ 
 
-[A144188](https://oeis.org/search?q=5%2C+16%2C+62%2C+286&language=english&go=Search)
+$\mathbb{P}(X_n=1) = \frac{1}{n(n-1)}\lfloor \frac{(n-1)^2}{4} \rfloor$
+
+$\mathbb{P}(X_n=2) = ?$
+
+$\mathbb{P}(X_n=n)$ is [OEIS A144188](https://oeis.org/search?q=5%2C+16%2C+62%2C+286&language=english&go=Search)
 
 
 
