@@ -1,10 +1,11 @@
-from random import shuffle
 import itertools
+from random import shuffle
 from copy import deepcopy
-from math import factorial
+from math import factorial, floor
+from scipy.special import binom
 
 def test_perm(perm):
-
+    # optimal guess for given seen pile of a total pile length n
     def guess(pile_arr, n):
         top_card_val = pile_arr[-1]
         x_v = 0
@@ -19,27 +20,17 @@ def test_perm(perm):
     stop = False
     while not stop and (k <= len(perm)-2):
         guessed_action = guess(perm[:k+1], len(perm))
-        # print(perm)
-        # print(perm[:k+1])
-        # print(guessed_action)
-        # print(k)
-        # print(perm[k])
-        # print(perm[k+1])
         if (guessed_action == 'lower' and perm[k] < perm[k+1]) or \
             (guessed_action == 'higher' and perm[k] > perm[k+1]):
-            # print((guessed_action == 'lower' and perm[k] < perm[k+1]))
-            # print((guessed_action == 'higher' and perm[k] > perm[k+1]))
-            # print('stopped!')
             stop = True
         if not stop: k += 1
-        # input()
-    # print(k)
 
     return k
 
-def test():
-    for n in range(7, 8):
-        special_index = 1
+def test(verbose = False):
+    special_index = 4 # this is X_n = special_index
+    for n in range(special_index+2, 10):
+    # for n in range(6, 7):
         special_index_perm_lst = []
         fail_at_list = [0 for k in range(n)] # number of failures 
         for perm in itertools.permutations([i for i in range(1,n+1)]):
@@ -48,17 +39,35 @@ def test():
             fail_at_list[index] += 1
         
         for index, val in enumerate(fail_at_list):
-            if index == special_index: print(f'Num perms of length {n} fail at position {index} = {val} (Prob = {val/factorial(n-special_index-2)})')
+            if index == special_index: 
+                print(f'Num perms of length {n} fail at position {index} = {val} (Prob = {val/factorial(n-special_index-2)})')
 
-        # uhh = [0 for _ in range(len(perm))]
-        # for perm in special_index_perm_lst:
-        #     uhh[perm[0]-1] += 1
-        # print(uhh)
-
+        # this for loop is for counting the unique permutations of the first special_index+2 cards
+        # these make up the terms that together form the value of s_{special_index, n}
+        sub_perms = []
         for perm in special_index_perm_lst:
-            print(perm)
+            if perm[:(special_index+2)] not in sub_perms: sub_perms.append(perm[:(special_index+2)])
+            # if verbose: print(perm)
+        
+        for i, sub_perm in enumerate(sub_perms):
+            if verbose: print(f'{i+1} is {sub_perm}')
+        
 
-test()
+test(verbose=False)
+
+def a_seq(n,k):
+    if n == 0: return 0
+    return a_seq(n-1,k) + int(binom(((n+1)//2)+k-1,k))
+    
+def a_arr():
+    for k in range(5):
+        row_str = ''
+        for n in range(7):
+            row_str += str(a_seq(n,k)) + ' '
+        row_str
+        print(row_str)
+
+
 
 # oeis_lst = [1,1,2,5,16,62,286,1519,9184,62000,463964,3800684,
 #  33911424,326678010,3385261194,37492199549,
@@ -66,11 +75,3 @@ test()
 #  1024178393797764,15041551052243448,
 #  231665680071392900,3736363255881557460,
 #  62935656581952683960]
-
-
-# from math import factorial
-# for index, val in enumerate(oeis_lst):
-#     print(val/factorial(index))
-
-# for index in range(1,len(oeis_lst)):
-#     print(oeis_lst[index]/oeis_lst[index-1])

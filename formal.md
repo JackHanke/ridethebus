@@ -10,15 +10,32 @@ The obserever has the knowledge that he is sampling from a permutation on $n$ el
 
 Let $X_n$ be the random variable representing the number of correct predictions before an incorrect prediction.
 
-The process can also be thought of as making random hops from the ordered list $1$ to $n$, where one marks spots
+The process can also be thought of as making random hops from the ordered list $1$ to $n$, where one marks spots that have already been visited.
 
-$\mathbb{E}(X_2)=10$ 
+$\mathbb{P}(X_n=0) = \frac{(n-2-k)!}{n!}s_{k,n}$
 
-$\mathbb{P}(X_n=1) = \frac{1}{n(n-1)}\lfloor \frac{(n-1)^2}{4} \rfloor$
+where $s_{k,n}$ is the number of ways to guess $k$ draws from an $n$-deck correctly before failure.
 
-$\mathbb{P}(X_n=2) = ?$
+TODO fix indexes for below
 
-$\mathbb{P}(X_n=n)$ is [OEIS A144188](https://oeis.org/search?q=5%2C+16%2C+62%2C+286&language=english&go=Search)
+Conjecture: We have:
 
+$$s_{k,n} = ns_{k-1,n-1} + a_{k,n}$$
 
+where 
 
+$$a_{k,n} = a_{k,n-1} + \binom{\lfloor \frac{n+1}{2} \rfloor +k-1}{k}$$
+
+and $a_{k,0} = 0$ for all $k$.
+
+$\mathbb{P}(X_n=0) = \frac{1}{n(n-1)}\lfloor \frac{(n-1)^2}{4} \rfloor$
+
+$\mathbb{P}(X_n=1) = ?$
+
+<!-- $\mathbb{E}(X_2)=10$ found numerically and you should probably double check this -->
+
+$n! - \sum_{k \leq n-2}s_{k,n}$ is [OEIS A144188](https://oeis.org/search?q=5%2C+16%2C+62%2C+286&language=english&go=Search)
+
+$\mathbb{E}(X_n) = \sum_{k \geq 0}k \mathbb{P}(X_n=k) = \sum_{k \geq 0} k \frac{(n-2-k)!}{n!} s_{k,n}$
+
+$\lim_{n \to \infty} \mathbb{E}(X_n) =?$
