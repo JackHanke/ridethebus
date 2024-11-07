@@ -52,8 +52,7 @@ def test(verbose = False):
         for i, sub_perm in enumerate(sub_perms):
             if verbose: print(f'{i+1} is {sub_perm}')
         
-
-test(verbose=False)
+# test(verbose=False)
 
 def a_seq(n,k):
     if n == 0: return 0
@@ -67,7 +66,28 @@ def a_arr():
         row_str
         print(row_str)
 
+def b(n):
+    if n <= 0: return 0
+    return b(n-1) + int(binom(((n+1)//2)+1, 2))
 
+def s(k,n, test=False):
+    if k-2 >= n: return 'Undefined' # TODO should be a raise probably
+    elif k == 0: return ((n-1)**2)//4
+    elif k == 1: return (n * (((n-2)**2)//4)) - b(n-4)
+
+    if test:
+        for k in range(2):
+            for n in range(2, 10):
+                val = s(k,n)
+                print(f's({k},{n}) = {val}')
+
+
+for n_ in range(3, 50):
+    n = 20*n_
+    # print(f'P(X_{n} = 1) = {s(1,n)/ (n*(n-1)*(n-2))}')
+    print(f'b({n}) = {b(n)/ (n*(n-1)*(n-2))}')
+
+# for n in range(10): print(f'b({n}) = {b(n)}')
 
 # oeis_lst = [1,1,2,5,16,62,286,1519,9184,62000,463964,3800684,
 #  33911424,326678010,3385261194,37492199549,
