@@ -27,65 +27,71 @@ def test_perm(perm):
 
     return k
 
-def test(verbose = False):
-    special_index = 4 # this is X_n = special_index
-    for n in range(special_index+2, 10):
-    # for n in range(6, 7):
-        special_index_perm_lst = []
-        fail_at_list = [0 for k in range(n)] # number of failures 
-        for perm in itertools.permutations([i for i in range(1,n+1)]):
-            index = test_perm(perm)
-            if index == special_index: special_index_perm_lst.append(perm)
-            fail_at_list[index] += 1
-        
-        for index, val in enumerate(fail_at_list):
-            if index == special_index: 
-                print(f'Num perms of length {n} fail at position {index} = {val} (Prob = {val/factorial(n-special_index-2)})')
+# returns row n of s_{n,k}(n-2-k)! values for 0<=k<=n, adjusts for 
+def counts_perm_lst(n):
+    counts_list = [0 for _ in range(n)] # number of failures 
+    for perm in itertools.permutations([i for i in range(1,n+1)]):
+        index = test_perm(perm)
+        counts_list[index] += 1
+    return counts_list
 
-        # this for loop is for counting the unique permutations of the first special_index+2 cards
-        # these make up the terms that together form the value of s_{special_index, n}
-        sub_perms = []
-        for perm in special_index_perm_lst:
-            if perm[:(special_index+2)] not in sub_perms: sub_perms.append(perm[:(special_index+2)])
-            # if verbose: print(perm)
-        
-        for i, sub_perm in enumerate(sub_perms):
-            if verbose: print(f'{i+1} is {sub_perm}')
-        
-# test(verbose=False)
+# returns row n of s_{n,k} values for 0<=k<=n, adjusts for 
+def counts_distinct_perm_lst(n):
+    counts_lst = counts_perm_lst(n)
+    distincts = []
+    for k, val in enumerate(counts_lst):
+        if n-2-k >0: distinct_val = int(val/factorial(n-2-k))
+        else: distinct_val = val
+        distincts.append(distinct_val)
+    return distincts
 
-def a_seq(n,k):
-    if n == 0: return 0
-    return a_seq(n-1,k) + int(binom(((n+1)//2)+k-1,k))
-    
-def a_arr():
-    for k in range(5):
-        row_str = ''
-        for n in range(7):
-            row_str += str(a_seq(n,k)) + ' '
-        row_str
-        print(row_str)
+# returns array of permutations of length n that fail at index k (after k draws)
+def k_index_perms_lst(n, k):
+    k_index_perm_lst = []
+    for perm in itertools.permutations([i for i in range(1,n+1)]):
+        index = test_perm(perm)
+        if index == k: k_index_perm_lst.append(perm)
+    return k_index_perm_lst
 
-def b(n):
-    if n <= 0: return 0
-    return b(n-1) + int(binom(((n+1)//2)+1, 2))
+# returns array of distinct subpermutations of permutations of length n that fail at index k (after k draws)
+def k_index_subperms_lst(n, k):
+    k_index_subperms_lst = []
+    fail_at_list = [0 for _ in range(n)] # number of failures 
+    for perm in itertools.permutations([i for i in range(1,n+1)]):
+        index = test_perm(perm)
+        if index == k: 
+            sub_perm = perm[:(k+2)]
+            if sub_perm not in k_index_subperms_lst: k_index_subperms_lst.append(sub_perm)
+    return k_index_subperms_lst
 
-def s(k,n, test=False):
-    if k-2 >= n: return 'Undefined' # TODO should be a raise probably
-    elif k == 0: return ((n-1)**2)//4
-    elif k == 1: return (n * (((n-2)**2)//4)) - b(n-4)
+def true_s(n,k): return len(k_index_subperms_lst(n,k))
 
-    if test:
-        for k in range(2):
-            for n in range(2, 10):
-                val = s(k,n)
-                print(f's({k},{n}) = {val}')
+# returns counts of sub permutations that have the same first_kay elements. for example, [4,3,1,2] and [4,3,2,1]
+# if first_kay == k+2, then all values are 1
+def group_by(n, k, first_kay):
+    sub_perms = k_index_subperms_lst(n,k)
+    freq = {}
+    for sub_perm in sub_perms:
+        first_kay_of_perm = tuple(sub_perm[:first_kay])
+        try:
+            freq[first_kay_of_perm] += 1
+        except KeyError:
+            freq[first_kay_of_perm] = 1
+    return freq
 
+if __name__ == '__main__':
+    # for n in range(2, 7):
+    #     arr = counts_distinct_perm_lst(n)
+    #     print(f'row {n} = {arr}')
+    n,k = 6,1
+    dict_ = group_by(n,k,first_kay=3)
+    for key, val in dict_.items():
+        print(key, val)
 
-for n_ in range(3, 50):
-    n = 20*n_
-    # print(f'P(X_{n} = 1) = {s(1,n)/ (n*(n-1)*(n-2))}')
-    print(f'b({n}) = {b(n)/ (n*(n-1)*(n-2))}')
+# for n_ in range(3, 50):
+#     n = 20*n_
+#     # print(f'P(X_{n} = 1) = {s(1,n)/ (n*(n-1)*(n-2))}')
+#     print(f'b({n}) = {b(n)/ (n*(n-1)*(n-2))}')
 
 # for n in range(10): print(f'b({n}) = {b(n)}')
 
@@ -95,3 +101,32 @@ for n_ in range(3, 50):
 #  1024178393797764,15041551052243448,
 #  231665680071392900,3736363255881557460,
 #  62935656581952683960]
+
+
+
+    def a_seq(n,k):
+        if n == 0: return 0
+        return a_seq(n-1,k) + int(binom(((n+1)//2)+k-1,k))
+        
+    def a_arr():
+        for k in range(5):
+            row_str = ''
+            for n in range(7):
+                row_str += str(a_seq(n,k)) + ' '
+            row_str
+            print(row_str)
+
+    def b(n):
+        if n <= 0: return 0
+        return b(n-1) + int(binom(((n+1)//2)+1, 2))
+
+    def s_conj(k,n, test=False):
+        if k-2 >= n: return 'Undefined' # TODO should be a raise probably
+        elif k == 0: return ((n-1)**2)//4
+        elif k == 1: return (n * (((n-2)**2)//4)) - b(n-4) # TODO just a conjecture
+
+        if test:
+            for k in range(2):
+                for n in range(2, 10):
+                    val = s(k,n)
+                    print(f's({k},{n}) = {val}')
