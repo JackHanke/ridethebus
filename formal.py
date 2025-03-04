@@ -83,7 +83,7 @@ if __name__ == '__main__':
     # for n in range(2, 7):
     #     arr = counts_distinct_perm_lst(n)
     #     print(f'row {n} = {arr}')
-    n,k = 6,1
+    n,k = 7,2
     dict_ = group_by(n,k,first_kay=3)
     for key, val in dict_.items():
         print(key, val)

@@ -60,3 +60,5 @@ $$p = \sum_{k=1}^{52} \mathbb{P}(X_4=k)\approx 1$$
 $$e = \sum_{k=1}^{52} k\mathbb{P}(X_4=k)=1.3621612249862824$$
 
 As $p$ is very close to $1$, $e$ is an excellent approximation for $\mathbb{E}(X_4)$.
+
+test
